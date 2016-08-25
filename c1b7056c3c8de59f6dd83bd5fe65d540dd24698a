@@ -1,0 +1,9 @@
+Quality-Assurance+1: Nemesis CI <nemesis@lina-infra.ru>
+Code-Review+2: Alexey Deryugin <aderyugin@mirantis.com>
+Workflow+1: Alexey Deryugin <aderyugin@mirantis.com>
+Verified+2: Nemesis CI <nemesis@lina-infra.ru>
+Submitted-by: Nemesis CI <nemesis@lina-infra.ru>
+Submitted-at: Thu, 25 Aug 2016 18:10:04 +0300
+Reviewed-on: https://review.lina-infra.ru/314
+Project: yggdrasilProject/ctfPlugin
+Branch: refs/heads/master
