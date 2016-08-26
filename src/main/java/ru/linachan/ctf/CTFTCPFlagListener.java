@@ -20,6 +20,7 @@ public class CTFTCPFlagListener implements YggdrasilService {
     private Queue<String> flagQueue;
 
     private AbstractServer hiServer;
+    private AbstractServer noServer;
     private AbstractServer loServer;
 
     private ExecutorService threadPool = Executors.newWorkStealingPool();
@@ -55,10 +56,27 @@ public class CTFTCPFlagListener implements YggdrasilService {
     public void onInit() {
         flagQueue = (Queue<String>) YggdrasilCore.INSTANCE.getQueue("ctfFlags");
 
-        hiServer = new AbstractServer(5555);
-        loServer = new AbstractServer(4444);
+        String host = YggdrasilCore.INSTANCE.getConfig().getString("ctf.acceptor.host", "0.0.0.0");
+        int hiPort = YggdrasilCore.INSTANCE.getConfig().getInt("ctf.acceptor.tcp.hi_port", 6666);
+        int noPort = YggdrasilCore.INSTANCE.getConfig().getInt("ctf.acceptor.tcp.no_port", 5555);
+        int loPort = YggdrasilCore.INSTANCE.getConfig().getInt("ctf.acceptor.tcp.lo_port", 4444);
+
+        hiServer = new AbstractServer(host, hiPort);
+        noServer = new AbstractServer(host, noPort);
+        loServer = new AbstractServer(host, loPort);
 
         hiServer.setChannelHandler(new ChannelInitializer<SocketChannel>() {
+            @Override
+            public void initChannel(SocketChannel ch) throws Exception {
+                ch.pipeline().addLast(
+                    new LineBasedFrameDecoder(32768),
+                    new StringDecoder(),
+                    new FlagHandler(2)
+                );
+            }
+        });
+
+        noServer.setChannelHandler(new ChannelInitializer<SocketChannel>() {
             @Override
             public void initChannel(SocketChannel ch) throws Exception {
                 ch.pipeline().addLast(
@@ -81,12 +99,14 @@ public class CTFTCPFlagListener implements YggdrasilService {
         });
 
         threadPool.submit(hiServer);
+        threadPool.submit(noServer);
         threadPool.submit(loServer);
     }
 
     @Override
     public void onShutdown() {
         hiServer.stop();
+        noServer.stop();
         loServer.stop();
 
         threadPool.shutdown();

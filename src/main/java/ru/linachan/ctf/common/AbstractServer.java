@@ -12,7 +12,9 @@ import org.slf4j.LoggerFactory;
 
 public class AbstractServer implements Runnable {
 
+    private String serverHost;
     private int serverPort;
+
     private ChannelHandler channelHandler;
 
     private EventLoopGroup master = new NioEventLoopGroup();
@@ -20,7 +22,8 @@ public class AbstractServer implements Runnable {
 
     private static Logger logger = LoggerFactory.getLogger(AbstractServer.class);
 
-    public AbstractServer(int bindPort) {
+    public AbstractServer(String bindHost, int bindPort) {
+        serverHost = bindHost;
         serverPort = bindPort;
     }
 
@@ -34,8 +37,8 @@ public class AbstractServer implements Runnable {
                 .option(ChannelOption.SO_BACKLOG, 128)
                 .childOption(ChannelOption.SO_KEEPALIVE, true);
 
-            ChannelFuture f = b.bind(serverPort).sync();
-            logger.info("AbstractServer started on {}", serverPort);
+            ChannelFuture f = b.bind(serverHost, serverPort).sync();
+            logger.info("AbstractServer started on {}:{}", serverHost, serverPort);
 
             f.channel().closeFuture().sync();
         } catch (InterruptedException ignored) {}
@@ -46,7 +49,7 @@ public class AbstractServer implements Runnable {
     }
 
     public void stop() {
-        logger.info("AbstractServer on {} is going to shutdown", serverPort);
+        logger.info("AbstractServer on {}:{} is going to shutdown", serverHost, serverPort);
         worker.shutdownGracefully();
         master.shutdownGracefully();
     }

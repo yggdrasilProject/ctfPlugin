@@ -15,7 +15,7 @@ public class CTFHTTPFlagListener implements HttpHandler, YggdrasilService {
 
     private HttpServer flagServer;
     private static final Pattern REQUEST_PATTERN = Pattern.compile(
-        "^/flag/(?<type>hi|lo)/(?<flag>[a-fA-F0-9]{32}=)$"
+        "^/flag/(?<type>hi|no|lo)/(?<flag>[a-fA-F0-9]{32}=)$"
     );
 
     private Queue<String> flagQueue;
@@ -25,8 +25,11 @@ public class CTFHTTPFlagListener implements HttpHandler, YggdrasilService {
     public void onInit() {
         flagQueue = (Queue<String>) YggdrasilCore.INSTANCE.getQueue("ctfFlags");
 
+        String host = YggdrasilCore.INSTANCE.getConfig().getString("ctf.acceptor.host", "0.0.0.0");
+        int port = YggdrasilCore.INSTANCE.getConfig().getInt("ctf.acceptor.http.port", 9999);
+
         try {
-            flagServer = HttpServer.create(new InetSocketAddress("0.0.0.0", 9999), 0);
+            flagServer = HttpServer.create(new InetSocketAddress(host, port), 0);
 
             HttpContext apiContext = flagServer.createContext("/", this);
 
@@ -55,6 +58,9 @@ public class CTFHTTPFlagListener implements HttpHandler, YggdrasilService {
 
             switch (matcher.group("type")) {
                 case "hi":
+                    flagQueue.push(String.format("%s:%d", matcher.group("flag"), 2));
+                    break;
+                case "no":
                     flagQueue.push(String.format("%s:%d", matcher.group("flag"), 1));
                     break;
                 case "lo":

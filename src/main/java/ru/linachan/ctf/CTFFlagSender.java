@@ -34,6 +34,7 @@ public class CTFFlagSender implements YggdrasilService {
         "Submitted flag has not been found",
         "The attacking team service is not up and therefore flags from the same services of other teams won't be accepted"
     };
+    private static final String[] PRIORITY = new String[] { "LO", "NO", "HI" };
 
     private boolean isRunning = true;
 
@@ -63,7 +64,7 @@ public class CTFFlagSender implements YggdrasilService {
                             case 0:
                                 logger.info(
                                     "Flag[{}:{}] sent!",
-                                    (flag.getInteger("priority") > 0) ? "HI" : "LO", flag.getString("flag")
+                                    PRIORITY[flag.getInteger("priority")], flag.getString("flag")
                                 );
                                 flags.updateOne(flag, new Document("$set", new Document("state", 1)));
                                 break;
@@ -74,7 +75,7 @@ public class CTFFlagSender implements YggdrasilService {
                             case 12:
                                 logger.info(
                                     "Flag[{}:{}] was not accepted: {}",
-                                    (flag.getInteger("priority") > 0) ? "HI" : "LO", flag.getString("flag"),
+                                    PRIORITY[flag.getInteger("priority")], flag.getString("flag"),
                                     THEMIS_ERRORS[responseCode]
                                 );
                                 Utils.sleep(5000);
@@ -86,7 +87,7 @@ public class CTFFlagSender implements YggdrasilService {
                             case 11:
                                 logger.info(
                                     "Flag[{}:{}] is invalid: {}",
-                                    (flag.getInteger("priority") > 0) ? "HI" : "LO", flag.getString("flag"),
+                                    PRIORITY[flag.getInteger("priority")], flag.getString("flag"),
                                     THEMIS_ERRORS[responseCode]
                                 );
                                 flags.updateOne(flag, new Document("$set", new Document("state", 2)));
