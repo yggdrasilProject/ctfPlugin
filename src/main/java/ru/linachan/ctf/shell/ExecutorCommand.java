@@ -11,11 +11,16 @@ import ru.linachan.yggdrasil.shell.helpers.CommandAction;
 import ru.linachan.yggdrasil.shell.helpers.ShellCommand;
 
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @ShellCommand(command = "executor", description = "Schedule exploit execution")
 public class ExecutorCommand extends YggdrasilShellCommand {
 
     private CTFPlugin ctfPlugin;
+    private static final Pattern TASKNAME_PATTERN = Pattern.compile(
+        "^[a-zA-Z0-9_\\-.]+$"
+    );
 
     @Override
     @SuppressWarnings("unchecked")
@@ -42,13 +47,21 @@ public class ExecutorCommand extends YggdrasilShellCommand {
         if (kwargs.containsKey("name")&&kwargs.containsKey("cmd")) {
             int initDelay = Integer.parseInt(kwargs.getOrDefault("init-delay", "0"));
             int execPeriod = Integer.parseInt(kwargs.getOrDefault("exec-period", "120"));
-            String exploitName = kwargs.get("name");
-            String[] exploitCommand = kwargs.get("cmd").split(" ");
 
-            try {
-                ctfPlugin.scheduleExecution(exploitName, new ExploitExecutor(exploitCommand), initDelay, execPeriod);
-            } catch (IllegalStateException e) {
-                console.writeLine("Execution with name {} already exists!", exploitName);
+            String exploitName = kwargs.get("name");
+            Matcher exploitNameMatcher = TASKNAME_PATTERN.matcher(exploitName);
+
+            if (exploitNameMatcher.matches()) {
+                String[] exploitCommand = kwargs.get("cmd").split(" ");
+
+                try {
+                    ctfPlugin.scheduleExecution(exploitName, new ExploitExecutor(exploitCommand), initDelay, execPeriod);
+                } catch (IllegalStateException e) {
+                    console.writeLine("Execution with name {} already exists!", exploitName);
+                    exit(1);
+                }
+            } else {
+                console.writeLine("Execution name should match '^[a-zA-Z0-9_-.]+$' regex.");
                 exit(1);
             }
         } else {
