@@ -9,7 +9,7 @@ import ru.linachan.yggdrasil.plugin.helpers.Plugin;
 
 
 @AutoStart
-@Plugin(name = "CTF", description = "Provides useful utils for CTF.")
+@Plugin(name = "ctf", description = "Provides useful utils for CTF.")
 public class CTFPlugin implements YggdrasilPlugin {
 
     private CTFDataBase db;

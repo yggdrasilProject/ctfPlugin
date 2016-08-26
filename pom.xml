@@ -19,7 +19,7 @@
         <dependency>
             <groupId>com.github.yggdrasilProject</groupId>
             <artifactId>yggdrasilCore</artifactId>
-            <version>v1.1.3</version>
+            <version>v1.1.4</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

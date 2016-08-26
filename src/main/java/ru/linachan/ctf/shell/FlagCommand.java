@@ -13,8 +13,8 @@ import ru.linachan.yggdrasil.shell.helpers.ShellCommand;
 
 import java.io.IOException;
 
-@ShellCommand(command = "ctf", description = "Provides access to useful CTF utils.")
-public class CTFCommand extends YggdrasilShellCommand {
+@ShellCommand(command = "flag", description = "FlagSender management command.")
+public class FlagCommand extends YggdrasilShellCommand {
 
     private CTFPlugin ctfPlugin;
     private Queue<String> flagQueue;
@@ -29,8 +29,8 @@ public class CTFCommand extends YggdrasilShellCommand {
         flagQueue = (Queue<String>) YggdrasilCore.INSTANCE.getQueue("ctfFlags");
     }
 
-    @CommandAction("Put flag")
-    public void put_flag() throws IOException {
+    @CommandAction("Enqueue flag")
+    public void send() throws IOException {
         if (args.size() > 0) {
             final int[] priority = new int[] { 2 };
 
@@ -95,7 +95,7 @@ public class CTFCommand extends YggdrasilShellCommand {
     }
 
     @CommandAction("Clean flag database")
-    public void cleanup() throws IOException {
+    public void cleanup_queue() throws IOException {
         if (console.readYesNo("Are you sure?")) {
             if (console.readYesNo("Do you really want to delete all flags?")) {
                 MongoCollection<Document> flags = ctfPlugin.getDB().getCollection("flags");
