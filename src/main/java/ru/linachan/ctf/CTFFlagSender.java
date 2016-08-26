@@ -5,6 +5,7 @@ import org.bson.Document;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import ru.linachan.ctf.common.Utils;
 import ru.linachan.yggdrasil.YggdrasilCore;
 import ru.linachan.yggdrasil.plugin.YggdrasilPluginManager;
 import ru.linachan.yggdrasil.service.YggdrasilService;
@@ -61,8 +62,8 @@ public class CTFFlagSender implements YggdrasilService {
                         switch (responseCode) {
                             case 0:
                                 logger.info(
-                                        "Flag[{}:{}] sent!",
-                                        (flag.getInteger("priority") > 0) ? "HI" : "LO", flag.getString("flag")
+                                    "Flag[{}:{}] sent!",
+                                    (flag.getInteger("priority") > 0) ? "HI" : "LO", flag.getString("flag")
                                 );
                                 flags.updateOne(flag, new Document("$set", new Document("state", 1)));
                                 break;
@@ -72,14 +73,11 @@ public class CTFFlagSender implements YggdrasilService {
                             case 7:
                             case 12:
                                 logger.info(
-                                        "Flag[{}:{}] was not accepted: {}",
-                                        (flag.getInteger("priority") > 0) ? "HI" : "LO", flag.getString("flag"),
-                                        THEMIS_ERRORS[responseCode]
+                                    "Flag[{}:{}] was not accepted: {}",
+                                    (flag.getInteger("priority") > 0) ? "HI" : "LO", flag.getString("flag"),
+                                    THEMIS_ERRORS[responseCode]
                                 );
-                                try {
-                                    Thread.sleep(5000);
-                                } catch (InterruptedException ignored) {
-                                }
+                                Utils.sleep(5000);
                                 break;
                             case 6:
                             case 8:
@@ -87,25 +85,19 @@ public class CTFFlagSender implements YggdrasilService {
                             case 10:
                             case 11:
                                 logger.info(
-                                        "Flag[{}:{}] is invalid: {}",
-                                        (flag.getInteger("priority") > 0) ? "HI" : "LO", flag.getString("flag"),
-                                        THEMIS_ERRORS[responseCode]
+                                    "Flag[{}:{}] is invalid: {}",
+                                    (flag.getInteger("priority") > 0) ? "HI" : "LO", flag.getString("flag"),
+                                    THEMIS_ERRORS[responseCode]
                                 );
                                 flags.updateOne(flag, new Document("$set", new Document("state", 2)));
                                 break;
                             case 5:
                                 logger.error("Contest is finished, so no flags accepted");
-                                try {
-                                    Thread.sleep(15000);
-                                } catch (InterruptedException ignored) {
-                                }
+                                Utils.sleep(15000);
                                 break;
                             case 2:
                                 logger.error("Something wrong with network configuration!");
-                                try {
-                                    Thread.sleep(15000);
-                                } catch (InterruptedException ignored) {
-                                }
+                                Utils.sleep(15000);
                                 break;
                         }
                     } catch (IOException e) {

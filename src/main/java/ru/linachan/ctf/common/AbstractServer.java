@@ -29,10 +29,10 @@ public class AbstractServer implements Runnable {
         try {
             ServerBootstrap b = new ServerBootstrap();
             b.group(master, worker)
-                    .channel(NioServerSocketChannel.class)
-                    .childHandler(channelHandler)
-                    .option(ChannelOption.SO_BACKLOG, 128)
-                    .childOption(ChannelOption.SO_KEEPALIVE, true);
+                .channel(NioServerSocketChannel.class)
+                .childHandler(channelHandler)
+                .option(ChannelOption.SO_BACKLOG, 128)
+                .childOption(ChannelOption.SO_KEEPALIVE, true);
 
             ChannelFuture f = b.bind(serverPort).sync();
             logger.info("AbstractServer started on {}", serverPort);
