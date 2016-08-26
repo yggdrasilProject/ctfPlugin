@@ -52,6 +52,7 @@ public class CTFPlugin implements YggdrasilPlugin {
         if (executors.containsKey(exploitName)) {
             YggdrasilTask executionTask = YggdrasilCore.INSTANCE.getScheduler().getTask(exploitName);
             executionTask.cancelTask();
+            executors.remove(exploitName);
         }
     }
 
