@@ -54,7 +54,11 @@ public class CTFFlagSender implements YggdrasilService {
 
         while (isRunning) {
             try {
-                Document flag = flags.find(new Document("state", 0)).sort(new Document("priority", -1).append("timestamp", 1)).first();
+                Document flag = flags.find(new Document("state", 0))
+                    .projection(new Document("flag", 1).append("priority", 1))
+                    .sort(new Document("priority", -1).append("timestamp", 1))
+                    .first();
+
                 if (flag != null) {
                     try {
                         JSONArray result = sendFlag(flag.getString("flag"));
