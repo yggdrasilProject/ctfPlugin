@@ -50,10 +50,13 @@ public class FlagCommand extends YggdrasilShellCommand {
         MongoCollection<Document> flags = ctfPlugin.getDB().getCollection("flags");
 
         if (kwargs.containsKey("f")||kwargs.containsKey("follow")) {
-            console.writeLine("%18s | %10s | %10s | %10s", "Queued (HI/NO/LO)", "Sent", "Error", "Total");
+            console.writeLine(
+                "%10s | %18s | %10s | %10s | %10s", "Processing", "Queued (HI/NO/LO)", "Sent", "Invalid", "Total"
+            );
             while (isRunning()) {
                 console.writeLine(
-                    "%18s | %10s | %10s | %10s",
+                    "%10s | %18s | %10s | %10s | %10s",
+                    String.valueOf(flagQueue.list().size()),
                     String.format(
                         "%d/%d/%d",
                         flags.count(new Document("state", 0).append("priority", 2)),
@@ -68,8 +71,9 @@ public class FlagCommand extends YggdrasilShellCommand {
                 try { Thread.sleep(5000); } catch(InterruptedException ignored) {}
             }
         } else {
-            Table queueStatus = new Table("Queued", "Sent", "Error", "Total");
+            Table queueStatus = new Table("Processing", "Queued", "Sent", "Invalid", "Total");
             queueStatus.addRow(
+                String.valueOf(flagQueue.list().size()),
                 String.format(
                     "%d/%d/%d",
                     flags.count(new Document("state", 0).append("priority", 2)),
