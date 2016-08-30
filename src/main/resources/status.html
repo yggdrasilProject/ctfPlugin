@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Queue Status</title>
+    <style>
+        #statsTable {
+            width: 100%;
+        }
+        .statsHeader {
+            color: #FFF;
+            background: #006894;
+        }
+        .statsRow {
+            color: #000;
+            background: #d1e0f0;
+        }
+    </style>
+</head>
+<body onload="loadStats()">
+    <div id="error"></div>
+    <div id="stats">
+        <table id="statsTable">
+            <tr class="statsHeader">
+                <th rowspan="2">ID</th>
+                <th rowspan="2">Processing</th>
+                <th colspan="3">Queued</th>
+                <th rowspan="2">Sent</th>
+                <th rowspan="2">Invalid</th>
+                <th rowspan="2">Total</th>
+            </tr>
+            <tr class="statsHeader">
+                <th>High</th>
+                <th>Normal</th>
+                <th>Low</th>
+            </tr>
+        </table>
+    </div>
+    <script type="text/javascript">
+        var errDiv = document.getElementById("error");
+        var statDiv = document.getElementById("statsTable");
+
+        var statRowId = 1;
+
+        function loadStats() {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/flag/status.json', false);
+            xhr.send();
+
+            if (xhr.status != 200) {
+                if (errDiv.firstChild != null) { errDiv.removeChild(errDiv.firstChild); }
+
+                var errMsg = document.createElement("h4");
+                errMsg.innerHTML = 'Unable to get Queue Status' + xhr.status + ': ' + xhr.statusText;
+                errDiv.appendChild(errMsg);
+            } else {
+                if (errDiv.firstChild != null) { errDiv.removeChild(errDiv.firstChild); }
+
+                var status = JSON.parse(xhr.responseText);
+
+                var statRow = document.createElement("tr");
+                statRow.classList.add("statsRow");
+                statRow.setAttribute("id", "statRow" + statRowId);
+                statRowId++;
+
+                if (statRowId > 10) {
+                    statDiv.removeChild(document.getElementById("statRow" + (statRowId - 10)));
+                }
+
+                var statId = document.createElement("td");
+                var statProcessing = document.createElement("td");
+
+                var statHigh = document.createElement("td");
+                var statNormal = document.createElement("td");
+                var statLow = document.createElement("td");
+
+                var statSent = document.createElement("td");
+                var statInvalid = document.createElement("td");
+                var statTotal = document.createElement("td");
+
+                statId.innerHTML = statRowId;
+                statProcessing.innerHTML = status['processing'];
+
+                statHigh.innerHTML = status['queued']['high'];
+                statNormal.innerHTML = status['queued']['normal'];
+                statLow.innerHTML = status['queued']['low'];
+
+                statSent.innerHTML = status['sent'];
+                statInvalid.innerHTML = status['invalid'];
+                statTotal.innerHTML = status['total'];
+
+                statRow.appendChild(statId);
+                statRow.appendChild(statProcessing);
+
+                statRow.appendChild(statHigh);
+                statRow.appendChild(statNormal);
+                statRow.appendChild(statLow);
+
+                statRow.appendChild(statSent);
+                statRow.appendChild(statInvalid);
+                statRow.appendChild(statTotal);
+
+                statDiv.appendChild(statRow);
+            }
+        }
+
+        setInterval(loadStats, 5000);
+    </script></body>
+</html>
