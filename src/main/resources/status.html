@@ -17,7 +17,7 @@
         }
     </style>
 </head>
-<body onload="loadStats()">
+<body>
     <div id="error"></div>
     <div id="stats">
         <table id="statsTable">
@@ -41,23 +41,43 @@
         var statDiv = document.getElementById("statsTable");
 
         var statRowId = 1;
+        var ready = false;
 
-        function loadStats() {
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', '/flag/status.json', false);
-            xhr.send();
+        var socket = new WebSocket("ws://flag.nemesis/ws");
 
-            if (xhr.status != 200) {
-                if (errDiv.firstChild != null) { errDiv.removeChild(errDiv.firstChild); }
+        function removeError() {
+            if (errDiv.firstChild != null) { errDiv.removeChild(errDiv.firstChild); }
+        }
 
-                var errMsg = document.createElement("h4");
-                errMsg.innerHTML = 'Unable to get Queue Status' + xhr.status + ': ' + xhr.statusText;
-                errDiv.appendChild(errMsg);
-            } else {
-                if (errDiv.firstChild != null) { errDiv.removeChild(errDiv.firstChild); }
+        function showError(error) {
+            removeError();
 
-                var status = JSON.parse(xhr.responseText);
+            var errMsg = document.createElement("h4");
+            errMsg.innerHTML = 'Unable to get Queue Status ' + error.code + ':' + error.message;
+            errDiv.appendChild(errMsg);
+        }
 
+        function getStatusIfReady() {
+            if (ready) {
+                socket.send(JSON.stringify({"action": "get_stats"}));
+            }
+        }
+
+        socket.onopen = function() {
+            ready = true;
+        };
+
+        socket.onclose = function(event) {
+            ready = false;
+        };
+
+        socket.onmessage = function(event) {
+            var data = JSON.parse(event.data);
+
+            if (data['status'] == 'ok') {
+                removeError();
+
+                var status = data['stats'];
                 var statRow = document.createElement("tr");
                 statRow.classList.add("statsRow");
                 statRow.setAttribute("id", "statRow" + statRowId);
@@ -102,8 +122,12 @@
 
                 statDiv.appendChild(statRow);
             }
-        }
+        };
 
-        setInterval(loadStats, 5000);
+        socket.onerror = function(error) {
+            showError(error);
+        };
+
+        setInterval(getStatusIfReady, 2000);
     </script></body>
 </html>
