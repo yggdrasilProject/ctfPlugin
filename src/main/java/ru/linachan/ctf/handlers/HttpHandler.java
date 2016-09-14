@@ -160,12 +160,11 @@ public class HttpHandler extends SimpleChannelInboundHandler<Object> {
                 context.internalPut("PROCESSING", flagQueue.list().size());
                 context.internalPut("ACCEPTED", flags.count(new Document("state", 1)));
                 context.internalPut("REJECTED", flags.count(new Document("state", 2)));
-                context.internalPut("QUEUED", String.format(
-                    "%d/%d/%d",
-                    flags.count(new Document("state", 0).append("priority", 2)),
-                    flags.count(new Document("state", 0).append("priority", 1)),
-                    flags.count(new Document("state", 0).append("priority", 0))
-                ));
+
+                context.internalPut("QUEUED_HI", flags.count(new Document("state", 0).append("priority", 2)));
+                context.internalPut("QUEUED_NO", flags.count(new Document("state", 0).append("priority", 1)));
+                context.internalPut("QUEUED_LO", flags.count(new Document("state", 0).append("priority", 0)));
+
                 context.internalPut("TIME_STAMP", new Date(System.currentTimeMillis()).toString());
 
                 List<Flag> flagList = new ArrayList<>();

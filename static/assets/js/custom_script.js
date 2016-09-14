@@ -32,7 +32,11 @@ function start(webSocketServer){
             var stats = data['stats'];
             var queued = stats['queued'];
 
-            $("#stat_queued").text(queued['high'] + "/" + queued['normal'] + "/" + queued['low']);
+            $("#stat_hi").text(queued['high']);
+            $("#stat_no").text(queued['normal']);
+            $("#stat_lo").text(queued['low']);
+            $("#stat_que_tot").text(queued['low'] + queued['normal'] + queued['high']);
+
             $("#stat_processing").text(stats['processing']);
             $("#stat_accepted").text(stats['sent']);
             $("#stat_rejected").text(stats['invalid']);

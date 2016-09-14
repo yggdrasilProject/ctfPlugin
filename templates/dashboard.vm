@@ -52,14 +52,8 @@
             <ul class="nav">
                 <li class="active">
                     <a href="dashboard.vm">
-                        <i class="ti-receipt"></i>
+                        <i class="ti-flag-alt"></i>
                         <p>Flags</p>
-                    </a>
-                </li>
-                <li>
-                    <a href="user.html">
-                        <i class="ti-jsfiddle"></i>
-                        <p>Services</p>
                     </a>
                 </li>
             </ul>
@@ -96,6 +90,10 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="footer">
+                                    <hr>
+                                    <p class="text-center stats">Processing queue size</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -111,11 +109,19 @@
                                     <div class="col-xs-7">
                                         <div class="numbers">
                                             <p>Queued</p>
-                                            <p id="stat_queued">${QUEUED}</p>
+                                            #set($QUEUED_TOTAL = $QUEUED_HI + $QUEUED_NO + $QUEUED_LO)
+                                            <p id="stat_que_tot">${QUEUED_TOTAL}</p>
                                         </div>
                                     </div>
                                 </div>
-
+                                <div class="footer">
+                                    <hr>
+                                    <p class="text-center">
+                                        <span class="ti-angle-double-up icon-danger"></span> <span id="stat_hi">${QUEUED_HI}</span>
+                                        <span class="ti-angle-up icon-warning"></span> <span id="stat_no">${QUEUED_NO}</span>
+                                        <span class="ti-angle-down icon-success"></span> <span id="stat_lo">${QUEUED_LO}</span>
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -135,6 +141,10 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="footer">
+                                    <hr>
+                                    <p class="text-center stats">Total flags accepted</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -153,6 +163,10 @@
                                             <p id="stat_rejected">${REJECTED}</p>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="footer">
+                                    <hr>
+                                    <p class="text-center stats">Total flags rejected</p>
                                 </div>
                             </div>
                         </div>
