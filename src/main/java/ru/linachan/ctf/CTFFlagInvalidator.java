@@ -32,7 +32,7 @@ public class CTFFlagInvalidator implements YggdrasilService {
             long invalidated = flags.updateMany(
                 new Document("timestamp", new Document("$lt", System.currentTimeMillis() - flagTimeToLive))
                     .append("state", 0),
-                new Document("$set", new Document("state", 2))
+                new Document("$set", new Document("state", 2).append("updateTime", System.currentTimeMillis()))
             ).getModifiedCount();
 
             if (invalidated > 0L) {

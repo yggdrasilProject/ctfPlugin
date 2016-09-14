@@ -70,7 +70,9 @@ public class CTFFlagSender implements YggdrasilService {
                                     "Flag[{}:{}] sent!",
                                     PRIORITY[flag.getInteger("priority")], flag.getString("flag")
                                 );
-                                flags.updateOne(flag, new Document("$set", new Document("state", 1)));
+                                flags.updateOne(flag, new Document(
+                                    "$set", new Document("state", 1).append("updateTime", System.currentTimeMillis())
+                                ));
                                 break;
                             case 1:
                             case 3:
@@ -94,7 +96,9 @@ public class CTFFlagSender implements YggdrasilService {
                                     PRIORITY[flag.getInteger("priority")], flag.getString("flag"),
                                     THEMIS_ERRORS[responseCode]
                                 );
-                                flags.updateOne(flag, new Document("$set", new Document("state", 2)));
+                                flags.updateOne(flag, new Document(
+                                    "$set", new Document("state", 2).append("updateTime", System.currentTimeMillis())
+                                ));
                                 break;
                             case 5:
                                 logger.error("Contest is finished, so no flags accepted");
