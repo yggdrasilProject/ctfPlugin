@@ -175,7 +175,7 @@
                                 </tr></thead>
                                 <tbody id="stat_flags">
                                     #foreach( $flag in ${FLAGS} )
-                                    <tr id="${flag.getId()}_${flag.getStatus()}">
+                                    <tr id="${flag.getId()}_${flag.getState()}">
                                         <td>${flag.getId()}</td>
                                         <td>${flag.getFlag()}</td>
                                         <td>${flag.getPriority()}</td>
