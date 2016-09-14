@@ -40,16 +40,44 @@ public class CTFFlagListener implements YggdrasilService {
 
         httpServer = new AbstractServer(host, httpPort);
 
-        ChannelInitializer<SocketChannel> tcpChannelInitializer = new ChannelInitializer<SocketChannel>() {
-            @Override
-            public void initChannel(SocketChannel ch) throws Exception {
-                ch.pipeline().addLast(
-                    new LineBasedFrameDecoder(32768),
-                    new StringDecoder(),
-                    new FlagHandler(2)
-                );
+        hiServer.setChannelHandler(
+            new ChannelInitializer<SocketChannel>() {
+                @Override
+                public void initChannel(SocketChannel ch) throws Exception {
+                    ch.pipeline().addLast(
+                        new LineBasedFrameDecoder(32768),
+                        new StringDecoder(),
+                        new FlagHandler(2)
+                    );
+                }
             }
-        };
+        );
+
+        noServer.setChannelHandler(
+            new ChannelInitializer<SocketChannel>() {
+                @Override
+                public void initChannel(SocketChannel ch) throws Exception {
+                    ch.pipeline().addLast(
+                        new LineBasedFrameDecoder(32768),
+                        new StringDecoder(),
+                        new FlagHandler(1)
+                    );
+                }
+            }
+        );
+
+        loServer.setChannelHandler(
+            new ChannelInitializer<SocketChannel>() {
+                @Override
+                public void initChannel(SocketChannel ch) throws Exception {
+                    ch.pipeline().addLast(
+                        new LineBasedFrameDecoder(32768),
+                        new StringDecoder(),
+                        new FlagHandler(0)
+                    );
+                }
+            }
+        );
 
         ChannelInitializer<SocketChannel> httpChannelInitializer = new ChannelInitializer<SocketChannel>() {
             @Override
@@ -62,9 +90,6 @@ public class CTFFlagListener implements YggdrasilService {
             }
         };
 
-        hiServer.setChannelHandler(tcpChannelInitializer);
-        noServer.setChannelHandler(tcpChannelInitializer);
-        loServer.setChannelHandler(tcpChannelInitializer);
 
         httpServer.setChannelHandler(httpChannelInitializer);
 
