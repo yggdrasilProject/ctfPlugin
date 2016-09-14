@@ -46,26 +46,20 @@ socket.onmessage = function(event) {
         var id = $("#stat_flags tr").first().attr("id");
 
         var flags = data['flags'];
-        var arrayId = flags.length - 1;
 
-        for (var i = 0; i < flags.length; i++) {
-            if (flags[i]['id'] + "_" + flags[i]['state'] == id) {
-                arrayId = i;
-                break;
+        for (var j = flags.length - 1; j >= 0; j--) {
+            if ($("#" + flags[j]['id'] + "_" + flags[j]['state']).length == 0) {
+                var row = $("<tr></tr>").attr("id", flags[j]['id'] + "_" + flags[j]['state']);
+
+                row.append($("<td></td>").text(flags[j]['id']));
+                row.append($("<td></td>").text(flags[j]['flag']));
+                row.append($("<td></td>").text(flags[j]['priority']));
+                row.append($("<td></td>").text(flags[j]['state']));
+                row.append($("<td></td>").text(flags[j]['time']));
+
+                console.log(row);
+                $("#stat_flags").prepend(row);
             }
-        }
-
-        for (var j = arrayId - 1; j >= 0; j--) {
-            var row = $("<tr></tr>").attr("id", flags[j]['id'] + "_" + flags[j]['state']);
-
-            row.append($("<td></td>").text(flags[j]['id']));
-            row.append($("<td></td>").text(flags[j]['flag']));
-            row.append($("<td></td>").text(flags[j]['priority']));
-            row.append($("<td></td>").text(flags[j]['state']));
-            row.append($("<td></td>").text(flags[j]['time']));
-
-            console.log(row);
-            $("#stat_flags").prepend(row);
         }
     }
 };
