@@ -14,6 +14,8 @@ import ru.linachan.yggdrasil.YggdrasilCore;
 import ru.linachan.yggdrasil.common.Queue;
 import ru.linachan.yggdrasil.plugin.YggdrasilPluginManager;
 
+import java.util.Date;
+
 @SuppressWarnings("unchecked")
 public class FlagWSHandler implements WebSocketMessageHandler {
 
@@ -56,6 +58,7 @@ public class FlagWSHandler implements WebSocketMessageHandler {
 
                     response.put("flags", flagList);
                     response.put("stats", stats);
+                    response.put("timestamp", new Date(System.currentTimeMillis()).toString());
                     break;
                 default:
                     response.put("status", "error");

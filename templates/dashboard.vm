@@ -162,7 +162,7 @@
                     <div class="card">
                         <div class="header">
                             <h4 class="title">Details</h4>
-                            <p class="category">Last update on:</p>
+                            <p class="category">Last update on: <span id="last_updated">${TIME_STAMP}</span></p>
                         </div>
                         <div class="content table-responsive table-full-width">
                             <table class="table table-striped">
@@ -177,9 +177,17 @@
                                     #foreach( $flag in ${FLAGS} )
                                     <tr id="${flag.getId()}_${flag.getState()}">
                                         <td>${flag.getId()}</td>
-                                        <td>${flag.getFlag()}</td>
+                                        <td class="text-muted">${flag.getFlag()}</td>
                                         <td>${flag.getPriority()}</td>
-                                        <td>${flag.getState()}</td>
+                                        #if( $flag.getState() == "Queued" )
+                                        <td class="text-info">${flag.getState()}</td>
+                                        #elseif( $flag.getState() == "Accepted" )
+                                        <td class="text-success">${flag.getState()}</td>
+                                        #elseif( $flag.getState() == "Rejected" )
+                                        <td class="text-danger">${flag.getState()}</td>
+                                        #else
+                                        <td class="text-primary">${flag.getState()}</td>
+                                        #end
                                         <td>${flag.getTime()}</td>
                                     </tr>
                                     #end
@@ -213,9 +221,6 @@
 
 <!--  Notifications Plugin    -->
 <script src="/static/assets/js/bootstrap-notify.js"></script>
-
-<!--  Google Maps Plugin    -->
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js"></script>
 
 <!-- Paper Dashboard Core javascript and methods for Demo purpose -->
 <script src="/static/assets/js/paper-dashboard.js"></script>

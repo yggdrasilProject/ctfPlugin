@@ -166,6 +166,7 @@ public class HttpHandler extends SimpleChannelInboundHandler<Object> {
                     flags.count(new Document("state", 0).append("priority", 1)),
                     flags.count(new Document("state", 0).append("priority", 0))
                 ));
+                context.internalPut("TIME_STAMP", new Date(System.currentTimeMillis()).toString());
 
                 List<Flag> flagList = new ArrayList<>();
 

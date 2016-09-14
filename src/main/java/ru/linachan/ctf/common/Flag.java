@@ -44,7 +44,7 @@ public class Flag {
             case 1:
                 return "Accepted";
             case 2:
-                return "Invalid";
+                return "Rejected";
             default:
                 return "Unknown";
         }

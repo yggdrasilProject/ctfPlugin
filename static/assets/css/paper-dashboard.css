@@ -94,6 +94,10 @@ blockquote small {
 .text-muted {
   color: #DDDDDD; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/conacelelena\/paper-dashboard\/assets\/sass\/paper\/_typography\.scss}line{font-family:\0000362}}
+.text-muted:hover {
+  color: #252422; }
+
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/conacelelena\/paper-dashboard\/assets\/sass\/paper\/_typography\.scss}line{font-family:\0000365}}
 .text-primary, .text-primary:hover {
   color: #427C89; }
