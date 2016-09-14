@@ -49,14 +49,14 @@ socket.onmessage = function(event) {
         var arrayId = flags.length - 1;
 
         for (var i = 0; i < flags.length; i++) {
-            if (flags[i]['id'] == id) {
+            if (flags[i]['id'] + "_" + flags[i]['state'] == id) {
                 arrayId = i;
                 break;
             }
         }
 
         for (var j = arrayId - 1; j >= 0; j--) {
-            var row = $("<tr></tr>").attr("id", flags[j]['id']);
+            var row = $("<tr></tr>").attr("id", flags[j]['id'] + "_" + flags[j]['state']);
 
             row.append($("<td></td>").text(flags[j]['id']));
             row.append($("<td></td>").text(flags[j]['flag']));

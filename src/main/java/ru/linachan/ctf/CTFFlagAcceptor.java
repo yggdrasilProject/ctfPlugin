@@ -54,6 +54,7 @@ public class CTFFlagAcceptor implements YggdrasilService {
                     .append("state", 0)
                     .append("priority", priority)
                     .append("timestamp", System.currentTimeMillis())
+                    .append("updateTime", System.currentTimeMillis())
             );
         }
     }
