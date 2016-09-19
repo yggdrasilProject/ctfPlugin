@@ -129,7 +129,7 @@ public class CTFFlagSender implements YggdrasilService {
         HttpURLConnection httpConnection = (HttpURLConnection) checkerURL.openConnection();
 
         httpConnection.setRequestMethod("POST");
-        httpConnection.addRequestProperty("Content=Type", "application/json");
+        httpConnection.addRequestProperty("Content-Type", "application/json");
         httpConnection.setDoOutput(true);
 
         JSONArray flagJSON = new JSONArray();
@@ -145,6 +145,7 @@ public class CTFFlagSender implements YggdrasilService {
         JSONArray response = null;
 
         try {
+            logger.info(flagJSON.toJSONString());
             response = (JSONArray) parser.parse(new InputStreamReader(httpConnection.getInputStream()));
         } catch (ParseException e) {
             logger.error("Unable to parse Themis response: {}", e.getMessage());
